@@ -11,51 +11,68 @@ import Alamofire
 
 class WeatherDataModal {
     
-    private var _date: Double?
-    private var _temp: String?
-    private var _location: String?
-    private var _weather: String?
+    let apiurl = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=Delhi&appid=4e31d2627a2363ee262996975cdaa62e")!
+
     typealias JSONStandard = Dictionary<String, AnyObject>
+    private var _currenttemp: String?
+    private var _maxtemp: String?
+    private var _mintemp: String?
+    private var _todaysdate: Double?
+    private var _weatherstatus: String?
+    private var _selectedlocation: String?
     
-    let url = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=San%20Jose&appid=4e31d2627a2363ee262996975cdaa62e")!
     
-    var date: String {
+    var formatteddate: String {
         print("in date:String")
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .long
-        dateFormatter.timeStyle = .none
-        let date = Date(timeIntervalSince1970: _date!)
-        return (_date != nil) ? "Today, \(dateFormatter.string(from: date))" : "Date Invalid"
+        let dateformatterobject = DateFormatter()
+        dateformatterobject.timeStyle = .none
+        dateformatterobject.dateStyle = .long
+        let formatteddate = Date(timeIntervalSince1970: _todaysdate!)
+        return (_todaysdate != nil) ? "Today, \(dateformatterobject.string(from: formatteddate))" : "Date Invalid"
     }
     
-    var temp: String {
-        return _temp ?? "0 °C"
+    var currenttemp: String {
+        return _currenttemp ?? "0 °C"
     }
     
-    var location: String {
-        return _location ?? "Location Invalid"
+    var mintemp: String {
+        return _mintemp ?? "0 °C"
     }
     
-    var weather: String {
-        return _weather ?? "Weather Invalid"
+    var maxtemp: String {
+        return _maxtemp ?? "0 °C"
+    }
+    
+    var selectedlocation: String {
+        return _selectedlocation ?? "Location Invalid"
+    }
+    
+    var weatherstatus: String {
+        return _weatherstatus ?? "Weather Invalid"
     }
     
     
     
     func downloadData(completed: @escaping ()-> ()) {
         
-        Alamofire.request(url).responseJSON(completionHandler: {
+        Alamofire.request(apiurl).responseJSON(completionHandler: {
             response in
-            let result = response.result
+            let responseresult = response.result
             print("response recieved")
-            print(result)
+            print(responseresult)
             print("after result")
-            if let dict = result.value as? JSONStandard, let main = dict["main"] as? JSONStandard, let temp = main["temp"] as? Double, let weatherArray = dict["weather"] as? [JSONStandard], let weather = weatherArray[0]["main"] as? String, let name = dict["name"] as? String, let sys = dict["sys"] as? JSONStandard, let country = sys["country"] as? String, let dt = dict["dt"] as? Double {
+            if let resultdict = responseresult.value as? JSONStandard, let main = resultdict["main"] as? JSONStandard, let currenttemp = main["temp"] as? Double,let mintemp = main["temp_min"] as? Double,let maxtemp = main["temp_max"] as? Double, let fetchedweather = resultdict["weather"] as? [JSONStandard], let weatherstatus = fetchedweather[0]["main"] as? String, let cityname = resultdict["name"] as? String, let sys = resultdict["sys"] as? JSONStandard, let selectedcountry = sys["country"] as? String, let dt = resultdict["dt"] as? Double {
                 
-                self._temp = String(format: "%.0f °C", temp - 273.15)
-                self._weather = weather
-                self._location = "\(name), \(country)"
-                self._date = dt
+                self._selectedlocation = "\(cityname), \(selectedcountry)"
+                self._mintemp = String(format: "%.0f °C", mintemp - 273.15)
+                self._todaysdate = dt
+                self._maxtemp = String(format: "%.0f °C", maxtemp - 273.15)
+                self._weatherstatus = weatherstatus
+                self._currenttemp = String(format: "%.0f °C", currenttemp - 273.15)
+                
+                
+                
+                
             }
             
             completed()

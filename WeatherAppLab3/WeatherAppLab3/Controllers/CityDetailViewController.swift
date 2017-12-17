@@ -13,6 +13,8 @@ class CityDetailViewController: UIViewController {
     
     @IBOutlet weak var cityName: UILabel!
     @IBOutlet weak var weatherDesc: UILabel!
+    @IBOutlet weak var mintemparature: UILabel!
+    @IBOutlet weak var maxtemparature: UILabel!
     @IBOutlet weak var temparature: UILabel!
     @IBOutlet weak var date: UILabel!
     var weatherData = WeatherDataModal()
@@ -31,10 +33,12 @@ class CityDetailViewController: UIViewController {
     }
     
     func renderUI(){
-        cityName.text = weatherData.location
-        weatherDesc.text = weatherData.weather
-        temparature.text = "\(weatherData.temp)"
-        date.text = weatherData.date
+        cityName.text = weatherData.selectedlocation
+        weatherDesc.text = weatherData.weatherstatus
+        temparature.text = "\(weatherData.currenttemp)"
+        mintemparature.text = "\(weatherData.mintemp)"
+        maxtemparature.text = "\(weatherData.maxtemp)"
+        date.text = weatherData.formatteddate
         
     }
     
