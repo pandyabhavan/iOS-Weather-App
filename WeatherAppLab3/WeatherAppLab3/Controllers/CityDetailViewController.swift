@@ -5,7 +5,6 @@
 //  Created by Nayan Goel on 12/15/17.
 //  Copyright © 2017 NayanGoel. All rights reserved.
 //
-
 import Foundation
 import UIKit
 
@@ -21,9 +20,9 @@ class CityDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        weatherData.downloadData {
+        weatherData.downloadData(city: "Delhi", completed:{
             self.renderUI()
-        }
+        })
         // Do any additional setup after loading the view, typically from a nib.
     }
     

@@ -11,7 +11,7 @@ import Alamofire
 
 class WeatherDataModal {
     
-    let apiurl = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=Delhi&appid=4e31d2627a2363ee262996975cdaa62e")!
+    var apiurl = URL(string: "https://api.openweathermap.org/data/2.5/weather?q=Delhi&appid=4e31d2627a2363ee262996975cdaa62e")!
 
     typealias JSONStandard = Dictionary<String, AnyObject>
     private var _currenttemp: String?
@@ -53,8 +53,9 @@ class WeatherDataModal {
     
     
     
-    func downloadData(completed: @escaping ()-> ()) {
-        
+    func downloadData(city:String, completed: @escaping ()-> ()) {
+      apiurl = URL(string: "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=4e31d2627a2363ee262996975cdaa62e")!
+        print(apiurl)
         Alamofire.request(apiurl).responseJSON(completionHandler: {
             response in
             let responseresult = response.result
@@ -72,7 +73,7 @@ class WeatherDataModal {
                 
                 
                 
-                
+            
             }
             
             completed()
