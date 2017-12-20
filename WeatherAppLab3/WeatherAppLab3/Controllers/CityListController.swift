@@ -13,8 +13,8 @@ var loadData : Int = 0
 
 class CityListController: UITableViewController, UISearchResultsUpdating {
     
-    var items = [String]()
-    var addedItems = [String]()
+    var items = ["San Jose, CA, United States"]
+    var addedItems = ["San Jose, CA, United States"]
     let searchController = UISearchController(searchResultsController: nil)
     var googleLocation = GoogleLocationAPIModal()
     var weatherModal = WeatherDataModal()
@@ -59,9 +59,12 @@ class CityListController: UITableViewController, UISearchResultsUpdating {
        tableView.reloadData()
         }
         else {
-            let secondViewController:CityDetailViewController = CityDetailViewController()
-            
-            self.present(secondViewController, animated: true, completion: nil)
+            var fullNameArr = items[indexPath.row].components(separatedBy: ",")
+            let cityName: String = fullNameArr[0].replacingOccurrences(of: " ", with: "%20", options: .literal, range: nil)
+           weatherModal.setCurrentCity(city: cityName)
+            let storyBoard = UIStoryboard(name:"Main",bundle:Bundle.main)
+            let destination = storyBoard.instantiateViewController(withIdentifier: "CityDetailViewController") as! CityDetailViewController
+            navigationController?.pushViewController(destination, animated: true)
         }
     }
   
